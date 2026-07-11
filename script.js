@@ -114,14 +114,28 @@ function render() {
       const slot = document.createElement("div");
       slot.className = "slot";
       slot.innerHTML = `
-        <span class="year">${yearRevealed ? ev.displayYear : "????"}</span>
+        <span class="year">${yearRevealed ? ev.displayYear : ""}</span>
         <div class="slot-info">
           <div class="event-title">${ev.title}</div>
           <div class="event-desc">${ev.desc}</div>
         </div>
-        ${yearRevealed ? "" : `<button class="show-year-btn" data-id="${ev.id}">Show Year</button>`}
       `;
       timeline.appendChild(slot);
+
+      if (!yearRevealed) {
+        const btn = document.createElement("button");
+        btn.className = "show-year-btn";
+        btn.textContent = "Show Year";
+        btn.addEventListener("click", e => {
+          e.stopPropagation();
+          if (!revealedYearIds.has(ev.id)) {
+            revealedYearIds.add(ev.id);
+            showYearCount++;
+            render();
+          }
+        });
+        slot.appendChild(btn);
+      }
 
       const label = (idx === placed.length - 1) ? "Drop here (after all)" : "Drop here";
       timeline.appendChild(makeDropzone(idx + 1, label));
@@ -166,6 +180,7 @@ function makeActiveCardDraggable() {
   }
 
   card.addEventListener("pointerdown", e => {
+    if (e.target.classList.contains("reveal-btn")) return;
     card.setPointerCapture(e.pointerId);
     isDragging = true;
     rect = card.getBoundingClientRect();
@@ -295,16 +310,7 @@ retryBtn.addEventListener("click", () => {
   nextCard();
 });
 
-timeline.addEventListener("click", e => {
-  if (e.target.classList.contains("show-year-btn")) {
-    const id = parseInt(e.target.dataset.id, 10);
-    if (!revealedYearIds.has(id)) {
-      revealedYearIds.add(id);
-      showYearCount++;
-      render();
-    }
-  }
-});
+
 
 function showWin() {
   const elapsed = Math.round((Date.now() - startTime) / 1000);
