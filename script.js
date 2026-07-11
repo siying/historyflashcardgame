@@ -17,10 +17,8 @@ let current = null;
 let attempts = 0;
 let errors = 0;
 let startTime = 0;
-let revealedYearIds = new Set();
-let showYearCount = 0;
-let revealedDescIds = new Set();
 let showDescCount = 0;
+let descRevealed = false; // whether current card's description is revealed
 
 const cardZone  = document.getElementById("card-zone");
 const timeline  = document.getElementById("timeline");
@@ -48,10 +46,8 @@ function initGame() {
   current = null;
   attempts = 0;
   errors = 0;
-  revealedYearIds = new Set();
-  showYearCount = 0;
-  revealedDescIds = new Set();
   showDescCount = 0;
+  descRevealed = false;
   startTime = Date.now();
   errorModal.classList.add("hidden");
   winModal.classList.add("hidden");
@@ -60,6 +56,7 @@ function initGame() {
 
 function nextCard() {
   current = queue.shift();
+  descRevealed = false;
   render();
 }
 
@@ -69,14 +66,32 @@ function render() {
   cardZone.innerHTML = "";
 
   if (current) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "hand-wrapper";
+
     const cur = document.createElement("div");
     cur.className = "card active";
     cur.id = "active-card";
     cur.innerHTML = `
       <div class="title">${current.title}</div>
-      <div class="desc">${current.desc}</div>
+      <div class="desc">${descRevealed ? current.desc : "????"}</div>
     `;
-    cardZone.appendChild(cur);
+    wrapper.appendChild(cur);
+
+    if (!descRevealed) {
+      const btn = document.createElement("button");
+      btn.className = "reveal-desc-btn";
+      btn.textContent = "Show Details";
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        descRevealed = true;
+        showDescCount++;
+        render();
+      });
+      wrapper.appendChild(btn);
+    }
+
+    cardZone.appendChild(wrapper);
   }
 
   timeline.innerHTML = "";
@@ -87,52 +102,15 @@ function render() {
     timeline.appendChild(makeDropzone(0, "Drop here (before all)"));
 
     placed.forEach((ev, idx) => {
-      const yearRevealed = revealedYearIds.has(ev.id);
-      const descRevealed = revealedDescIds.has(ev.id);
-
       const slot = document.createElement("div");
       slot.className = "slot";
-
-      const yearSpan = document.createElement("span");
-      yearSpan.className = `year${yearRevealed ? '' : ' blurred'}`;
-      yearSpan.textContent = yearRevealed ? ev.displayYear : "????";
-
-      const info = document.createElement("div");
-      info.className = "slot-info";
-
-      const titleDiv = document.createElement("div");
-      titleDiv.className = "event-title";
-      titleDiv.textContent = ev.title;
-
-      const descDiv = document.createElement("div");
-      descDiv.className = `event-desc${descRevealed ? '' : ' blurred'}`;
-      descDiv.textContent = descRevealed ? ev.desc : "????";
-
-      info.appendChild(titleDiv);
-      info.appendChild(descDiv);
-
-      const actions = document.createElement("div");
-      actions.className = "slot-actions";
-
-      if (!yearRevealed) {
-        const yrBtn = document.createElement("button");
-        yrBtn.className = "slot-action-btn";
-        yrBtn.dataset.id = ev.id;
-        yrBtn.textContent = "Year";
-        actions.appendChild(yrBtn);
-      }
-
-      if (!descRevealed) {
-        const descBtn = document.createElement("button");
-        descBtn.className = "slot-action-btn";
-        descBtn.dataset.id = ev.id;
-        descBtn.textContent = "Details";
-        actions.appendChild(descBtn);
-      }
-
-      slot.appendChild(yearSpan);
-      slot.appendChild(info);
-      slot.appendChild(actions);
+      slot.innerHTML = `
+        <span class="year">${ev.displayYear}</span>
+        <div class="slot-info">
+          <div class="event-title">${ev.title}</div>
+          <div class="event-desc">${ev.desc}</div>
+        </div>
+      `;
       timeline.appendChild(slot);
 
       const label = (idx === placed.length - 1) ? "Drop here (after all)" : "Drop here";
@@ -153,7 +131,6 @@ function makeDropzone(position, text) {
   return zone;
 }
 
-// Drag & Drop with auto-scroll for small screens
 function makeActiveCardDraggable() {
   const card = document.getElementById("active-card");
   if (!card) return;
@@ -200,7 +177,6 @@ function makeActiveCardDraggable() {
     card.style.left = `${newX}px`;
     card.style.top = `${newY}px`;
 
-    // Auto-scroll when near viewport edges (50px margin)
     const scrollEdge = 50;
     if (e.clientY < scrollEdge) {
       startAutoScroll(-1);
@@ -309,20 +285,6 @@ retryBtn.addEventListener("click", () => {
   nextCard();
 });
 
-timeline.addEventListener("click", e => {
-  if (e.target.classList.contains("slot-action-btn")) {
-    const id = parseInt(e.target.dataset.id, 10);
-    if (e.target.textContent === "Year") {
-      revealedYearIds.add(id);
-      showYearCount++;
-    } else {
-      revealedDescIds.add(id);
-      showDescCount++;
-    }
-    render();
-  }
-});
-
 function showWin() {
   const elapsed = Math.round((Date.now() - startTime) / 1000);
   const mins = Math.floor(elapsed / 60);
@@ -334,8 +296,7 @@ function showWin() {
     <p>Wrong guesses: <span class="num">${errors}</span></p>
     <p>Accuracy: <span class="num">${accuracy}%</span></p>
     <p>Time: <span class="num">${mins}m ${secs}s</span></p>
-    <p>Year reveals: <span class="num">${showYearCount}</span></p>
-    <p>Details reveals: <span class="num">${showDescCount}</span></p>`;
+    <p>Details revealed: <span class="num">${showDescCount}</span></p>`;
   winModal.classList.remove("hidden");
 }
 

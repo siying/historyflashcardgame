@@ -119,6 +119,31 @@ section h2 {
   transition: none; /* No delay while dragging */
 }
 
+/* Hand wrapper: card + reveal button */
+.hand-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.reveal-desc-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.reveal-desc-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
 /* Timeline Layout */
 .timeline {
   display: flex;
@@ -177,45 +202,9 @@ section h2 {
   min-width: 90px;
 }
 
-.slot .year.blurred {
-  color: var(--muted);
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  user-select: none;
-}
-
 .slot-info {
   flex: 1;
   min-width: 0;
-}
-
-.slot-actions {
-  display: flex;
-  gap: 0.4rem;
-  flex-shrink: 0;
-}
-
-.slot-action-btn {
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  padding: 0.35rem 0.65rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.slot-action-btn:hover {
-  background: var(--accent);
-  color: white;
-}
-
-.event-desc.blurred {
-  user-select: none;
 }
 
 .slot .event-title {
