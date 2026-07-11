@@ -17,8 +17,10 @@ let current = null;
 let attempts = 0;
 let errors = 0;
 let startTime = 0;
+let showYearCount = 0;
 let showDescCount = 0;
-let descRevealed = false; // whether current card's description is revealed
+let yearRevealed = false;
+let descRevealed = false;
 
 const cardZone  = document.getElementById("card-zone");
 const timeline  = document.getElementById("timeline");
@@ -46,7 +48,9 @@ function initGame() {
   current = null;
   attempts = 0;
   errors = 0;
+  showYearCount = 0;
   showDescCount = 0;
+  yearRevealed = false;
   descRevealed = false;
   startTime = Date.now();
   errorModal.classList.add("hidden");
@@ -56,6 +60,7 @@ function initGame() {
 
 function nextCard() {
   current = queue.shift();
+  yearRevealed = false;
   descRevealed = false;
   render();
 }
@@ -66,32 +71,56 @@ function render() {
   cardZone.innerHTML = "";
 
   if (current) {
-    const wrapper = document.createElement("div");
-    wrapper.className = "hand-wrapper";
-
     const cur = document.createElement("div");
     cur.className = "card active";
     cur.id = "active-card";
-    cur.innerHTML = `
-      <div class="title">${current.title}</div>
-      <div class="desc">${descRevealed ? current.desc : "????"}</div>
-    `;
-    wrapper.appendChild(cur);
 
-    if (!descRevealed) {
-      const btn = document.createElement("button");
-      btn.className = "reveal-desc-btn";
-      btn.textContent = "Show Details";
-      btn.addEventListener("click", e => {
+    const titleDiv = document.createElement("div");
+    titleDiv.className = "title";
+    titleDiv.textContent = current.title;
+    cur.appendChild(titleDiv);
+
+    if (!yearRevealed) {
+      const yrBtn = document.createElement("button");
+      yrBtn.className = "reveal-btn";
+      yrBtn.textContent = "Show Year";
+      yrBtn.addEventListener("click", e => {
         e.stopPropagation();
-        descRevealed = true;
-        showDescCount++;
-        render();
+        if (!yearRevealed && current) {
+          yearRevealed = true;
+          showYearCount++;
+          render();
+        }
       });
-      wrapper.appendChild(btn);
+      cur.appendChild(yrBtn);
+    } else {
+      const yearDiv = document.createElement("div");
+      yearDiv.className = "card-line";
+      yearDiv.textContent = current.displayYear;
+      cur.appendChild(yearDiv);
     }
 
-    cardZone.appendChild(wrapper);
+    if (!descRevealed) {
+      const descBtn = document.createElement("button");
+      descBtn.className = "reveal-btn";
+      descBtn.textContent = "Show Detail";
+      descBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        if (!descRevealed && current) {
+          descRevealed = true;
+          showDescCount++;
+          render();
+        }
+      });
+      cur.appendChild(descBtn);
+    } else {
+      const descDiv = document.createElement("div");
+      descDiv.className = "card-line card-desc";
+      descDiv.textContent = current.desc;
+      cur.appendChild(descDiv);
+    }
+
+    cardZone.appendChild(cur);
   }
 
   timeline.innerHTML = "";
@@ -296,7 +325,8 @@ function showWin() {
     <p>Wrong guesses: <span class="num">${errors}</span></p>
     <p>Accuracy: <span class="num">${accuracy}%</span></p>
     <p>Time: <span class="num">${mins}m ${secs}s</span></p>
-    <p>Details revealed: <span class="num">${showDescCount}</span></p>`;
+    <p>Year reveals: <span class="num">${showYearCount}</span></p>
+    <p>Detail reveals: <span class="num">${showDescCount}</span></p>`;
   winModal.classList.remove("hidden");
 }
 
