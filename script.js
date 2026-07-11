@@ -111,6 +111,10 @@ function render() {
       timeline.appendChild(makeDropzone(idx + 1, label));
     });
   }
+
+  if (current) {
+    makeActiveCardDraggable();
+  }
 }
 
 function makeDropzone(position, text) {
