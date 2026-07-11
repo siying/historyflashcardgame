@@ -79,11 +79,6 @@ function render() {
     titleDiv.textContent = current.title;
     cur.appendChild(titleDiv);
 
-    const yearDiv = document.createElement("div");
-    yearDiv.className = "card-line";
-    yearDiv.textContent = current.displayYear;
-    cur.appendChild(yearDiv);
-
     if (!descRevealed) {
       const btn = document.createElement("button");
       btn.className = "reveal-btn";
