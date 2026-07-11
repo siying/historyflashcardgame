@@ -19,7 +19,7 @@ let errors = 0;
 let startTime = 0;
 let showYearCount = 0;
 let showDescCount = 0;
-let yearRevealed = false;
+let revealedYearIds = new Set();
 let descRevealed = false;
 
 const cardZone  = document.getElementById("card-zone");
@@ -50,7 +50,7 @@ function initGame() {
   errors = 0;
   showYearCount = 0;
   showDescCount = 0;
-  yearRevealed = false;
+  revealedYearIds = new Set();
   descRevealed = false;
   startTime = Date.now();
   errorModal.classList.add("hidden");
@@ -60,7 +60,6 @@ function initGame() {
 
 function nextCard() {
   current = queue.shift();
-  yearRevealed = false;
   descRevealed = false;
   render();
 }
@@ -80,31 +79,16 @@ function render() {
     titleDiv.textContent = current.title;
     cur.appendChild(titleDiv);
 
-    if (!yearRevealed) {
-      const yrBtn = document.createElement("button");
-      yrBtn.className = "reveal-btn";
-      yrBtn.textContent = "Show Year";
-      yrBtn.addEventListener("click", e => {
-        e.stopPropagation();
-        if (!yearRevealed && current) {
-          yearRevealed = true;
-          showYearCount++;
-          render();
-        }
-      });
-      cur.appendChild(yrBtn);
-    } else {
-      const yearDiv = document.createElement("div");
-      yearDiv.className = "card-line";
-      yearDiv.textContent = current.displayYear;
-      cur.appendChild(yearDiv);
-    }
+    const yearDiv = document.createElement("div");
+    yearDiv.className = "card-line";
+    yearDiv.textContent = current.displayYear;
+    cur.appendChild(yearDiv);
 
     if (!descRevealed) {
-      const descBtn = document.createElement("button");
-      descBtn.className = "reveal-btn";
-      descBtn.textContent = "Show Detail";
-      descBtn.addEventListener("click", e => {
+      const btn = document.createElement("button");
+      btn.className = "reveal-btn";
+      btn.textContent = "Show Detail";
+      btn.addEventListener("click", e => {
         e.stopPropagation();
         if (!descRevealed && current) {
           descRevealed = true;
@@ -112,7 +96,7 @@ function render() {
           render();
         }
       });
-      cur.appendChild(descBtn);
+      cur.appendChild(btn);
     } else {
       const descDiv = document.createElement("div");
       descDiv.className = "card-line card-desc";
@@ -131,14 +115,16 @@ function render() {
     timeline.appendChild(makeDropzone(0, "Drop here (before all)"));
 
     placed.forEach((ev, idx) => {
+      const yearRevealed = revealedYearIds.has(ev.id);
       const slot = document.createElement("div");
       slot.className = "slot";
       slot.innerHTML = `
-        <span class="year">${ev.displayYear}</span>
+        <span class="year">${yearRevealed ? ev.displayYear : "????"}</span>
         <div class="slot-info">
           <div class="event-title">${ev.title}</div>
           <div class="event-desc">${ev.desc}</div>
         </div>
+        ${yearRevealed ? "" : `<button class="show-year-btn" data-id="${ev.id}">Show Year</button>`}
       `;
       timeline.appendChild(slot);
 
@@ -312,6 +298,17 @@ function showError(position) {
 retryBtn.addEventListener("click", () => {
   errorModal.classList.add("hidden");
   nextCard();
+});
+
+timeline.addEventListener("click", e => {
+  if (e.target.classList.contains("show-year-btn")) {
+    const id = parseInt(e.target.dataset.id, 10);
+    if (!revealedYearIds.has(id)) {
+      revealedYearIds.add(id);
+      showYearCount++;
+      render();
+    }
+  }
 });
 
 function showWin() {

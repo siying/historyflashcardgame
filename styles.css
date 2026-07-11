@@ -209,6 +209,25 @@ section h2 {
   min-width: 90px;
 }
 
+.show-year-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.show-year-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
 .slot-info {
   flex: 1;
   min-width: 0;
