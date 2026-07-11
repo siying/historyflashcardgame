@@ -482,7 +482,8 @@ function handlePlacement(position) {
 
     if (placed.length === gameEvents.length) {
       progressEl.textContent = `${placed.length} / ${gameEvents.length} placed`;
-      showWin();
+      render();
+      setTimeout(showWin, 2000);
     } else {
       nextCard();
     }
@@ -505,22 +506,22 @@ function isCorrectPlacement(ev, position) {
 }
 
 function showError(position) {
-  let msg = `"${current.title}" (${current.displayYear}) does not belong there! `;
+  let msg = `"${current.title}" does not belong there! `;
 
   if (position > 0) {
     const beforeEvent = placed[position - 1];
     if (current.year < beforeEvent.year) {
-      msg += `It happened BEFORE "${beforeEvent.title}" (${beforeEvent.displayYear}).`;
+      msg += `It happened BEFORE "${beforeEvent.title}".`;
     }
   }
-  if (position < placed.length && msg === `"${current.title}" (${current.displayYear}) does not belong there! `) {
+  if (position < placed.length && msg === `"${current.title}" does not belong there! `) {
     const afterEvent = placed[position];
     if (current.year > afterEvent.year) {
-      msg += `It happened AFTER "${afterEvent.title}" (${afterEvent.displayYear}).`;
+      msg += `It happened AFTER "${afterEvent.title}".`;
     }
   }
 
-  if (msg === `"${current.title}" (${current.displayYear}) does not belong there! `) {
+  if (msg === `"${current.title}" does not belong there! `) {
     msg += `Find its correct chronological order on the timeline.`;
   }
 
