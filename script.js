@@ -113,14 +113,6 @@ function render() {
       const yearRevealed = revealedYearIds.has(ev.id);
       const slot = document.createElement("div");
       slot.className = "slot";
-      slot.innerHTML = `
-        <span class="year">${yearRevealed ? ev.displayYear : ""}</span>
-        <div class="slot-info">
-          <div class="event-title">${ev.title}</div>
-          <div class="event-desc">${ev.desc}</div>
-        </div>
-      `;
-      timeline.appendChild(slot);
 
       if (!yearRevealed) {
         const btn = document.createElement("button");
@@ -135,7 +127,21 @@ function render() {
           }
         });
         slot.appendChild(btn);
+      } else {
+        const yr = document.createElement("span");
+        yr.className = "year";
+        yr.textContent = ev.displayYear;
+        slot.appendChild(yr);
       }
+
+      const info = document.createElement("div");
+      info.className = "slot-info";
+      info.innerHTML = `
+        <div class="event-title">${ev.title}</div>
+        <div class="event-desc">${ev.desc}</div>
+      `;
+      slot.appendChild(info);
+      timeline.appendChild(slot);
 
       const label = (idx === placed.length - 1) ? "Drop here (after all)" : "Drop here";
       timeline.appendChild(makeDropzone(idx + 1, label));
