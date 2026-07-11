@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History Flashcard Timeline Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>History Flashcard Timeline</h1>
+    <p id="progress">0 / 10 placed</p>
+  </header>
+
+  <main id="game">
+    <section id="hand">
+      <h2>Your flashcards</h2>
+      <div id="card-zone" class="card-zone"></div>
+    </section>
+
+    <section id="timeline-section">
+      <h2>Timeline</h2>
+      <p class="hint">Pick the year the highlighted card belongs to.</p>
+      <div id="timeline" class="timeline"></div>
+    </section>
+  </main>
+
+  <!-- Error modal -->
+  <div id="error-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Not quite!</h2>
+      <p id="error-msg"></p>
+      <button id="retry-btn">Try again</button>
+    </div>
+  </div>
+
+  <!-- Win modal -->
+  <div id="win-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>You did it!</h2>
+      <div id="stats"></div>
+      <button id="play-again">Play again</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

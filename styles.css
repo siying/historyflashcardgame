@@ -1,0 +1,270 @@
+:root {
+  --bg: #1a1a2e;
+  --card-bg: #16213e;
+  --accent: #e94560;
+  --success: #4ecca3;
+  --text: #eaeaea;
+  --muted: #9aa0b5;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+#progress {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+#game {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+section h2 {
+  margin-bottom: 0.75rem;
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Hand of flashcards */
+.card-zone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  min-height: 120px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 2px solid #394867;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  width: 240px;
+  cursor: default;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.card .title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.card .desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.3);
+  transform: translateY(-4px);
+}
+
+.card.placed {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Timeline slots */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px dashed #394867;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  min-height: 70px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.slot.filled {
+  border-style: solid;
+  border-color: var(--success);
+}
+
+.slot.insert-point {
+  background: rgba(233, 69, 96, 0.12);
+  border-color: var(--accent);
+  cursor: pointer;
+}
+
+.slot.insert-point::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+.slot .year {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+  min-width: 80px;
+}
+
+.slot .event-title {
+  font-weight: 600;
+}
+
+.slot .event-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-left: 0.5rem;
+}
+
+.slot .placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Insert control row shown for current card */
+.insert-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  background: rgba(233, 69, 96, 0.1);
+  border-radius: 8px;
+}
+
+.insert-row label {
+  font-size: 0.9rem;
+}
+
+.insert-row input {
+  width: 90px;
+  padding: 0.4rem 0.5rem;
+  background: #1a1a2e;
+  border: 1px solid #394867;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.insert-row button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.insert-row button:hover {
+  background: #d63851;
+}
+
+/* Modals */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  border: 2px solid #394867;
+  border-radius: 14px;
+  padding: 2rem;
+  max-width: 420px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.modal-content p {
+  margin-bottom: 1.25rem;
+  color: var(--muted);
+}
+
+.modal-content button,
+#play-again {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-content button:hover,
+#play-again:hover {
+  background: #d63851;
+}
+
+#stats {
+  text-align: left;
+  margin-bottom: 1.25rem;
+}
+
+#stats p {
+  margin: 0.4rem 0;
+  color: var(--text);
+}
+
+#stats .num {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.shake {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
