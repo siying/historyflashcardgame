@@ -19,6 +19,8 @@ let current = null;     // the card currently being placed
 let attempts = 0;
 let errors = 0;
 let startTime = 0;
+let revealedIds = new Set(); // IDs of placed events that have had their years revealed
+let showYearCount = 0;       // number of times user clicked "Show Year"
 
 const cardZone  = document.getElementById("card-zone");
 const timeline  = document.getElementById("timeline");
@@ -45,6 +47,8 @@ function initGame() {
   current = null;
   attempts = 0;
   errors = 0;
+  revealedIds = new Set();
+  showYearCount = 0;
   startTime = Date.now();
   errorModal.classList.add("hidden");
   winModal.classList.add("hidden");
@@ -89,14 +93,16 @@ function render() {
 
     placed.forEach((ev, idx) => {
       // 2. Placed Event Slot
+      const isRevealed = revealedIds.has(ev.id);
       const slot = document.createElement("div");
       slot.className = "slot";
       slot.innerHTML = `
-        <span class="year">${ev.displayYear}</span>
-        <div>
+        <span class="year ${isRevealed ? '' : 'blurred'}">${isRevealed ? ev.displayYear : "????"}</span>
+        <div style="flex-grow: 1;">
           <div class="event-title">${ev.title}</div>
           <div class="event-desc">${ev.desc}</div>
         </div>
+        ${isRevealed ? '' : `<button class="show-year-btn" data-id="${ev.id}">Show Year</button>`}
       `;
       timeline.appendChild(slot);
 
@@ -264,6 +270,16 @@ retryBtn.addEventListener("click", () => {
   nextCard();
 });
 
+// Event delegation for "Show Year" button clicks on the timeline
+timeline.addEventListener("click", e => {
+  if (e.target.classList.contains("show-year-btn")) {
+    const id = parseInt(e.target.dataset.id, 10);
+    revealedIds.add(id);
+    showYearCount++;
+    render();
+  }
+});
+
 function showWin() {
   const elapsed = Math.round((Date.now() - startTime) / 1000);
   const mins = Math.floor(elapsed / 60);
@@ -274,7 +290,8 @@ function showWin() {
     <p>Total attempts: <span class="num">${attempts}</span></p>
     <p>Wrong guesses: <span class="num">${errors}</span></p>
     <p>Accuracy: <span class="num">${accuracy}%</span></p>
-    <p>Time: <span class="num">${mins}m ${secs}s</span></p>`;
+    <p>Time: <span class="num">${mins}m ${secs}s</span></p>
+    <p>Year reveals: <span class="num">${showYearCount}</span></p>`;
   winModal.classList.remove("hidden");
 }
 

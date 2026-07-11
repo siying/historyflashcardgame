@@ -177,6 +177,32 @@ section h2 {
   min-width: 90px;
 }
 
+.slot .year.blurred {
+  color: var(--muted);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.show-year-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  margin-left: auto; /* Push to the absolute right side of the slot */
+}
+
+.show-year-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
 .slot .event-title {
   font-weight: 700;
   font-size: 1rem;
