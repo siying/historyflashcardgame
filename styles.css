@@ -160,7 +160,7 @@ section h2 {
 .slot {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   background: var(--card-bg);
   border: 2px solid var(--success);
   border-radius: 12px;
@@ -182,25 +182,40 @@ section h2 {
   font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 1px;
+  user-select: none;
 }
 
-.show-year-btn {
+.slot-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.slot-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.slot-action-btn {
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--accent);
   border-radius: 6px;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
-  margin-left: auto; /* Push to the absolute right side of the slot */
 }
 
-.show-year-btn:hover {
+.slot-action-btn:hover {
   background: var(--accent);
   color: white;
+}
+
+.event-desc.blurred {
+  user-select: none;
 }
 
 .slot .event-title {
@@ -281,6 +296,19 @@ section h2 {
 .modal-content button:hover,
 #play-again:hover {
   background: #d63851;
+}
+
+.secondary-btn {
+  background: transparent !important;
+  color: var(--muted) !important;
+  border: 1px solid var(--muted) !important;
+  margin-top: 0.5rem;
+}
+
+.secondary-btn:hover {
+  color: var(--text) !important;
+  border-color: var(--text) !important;
+  background: rgba(255,255,255,0.05) !important;
 }
 
 #stats {
