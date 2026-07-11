@@ -506,26 +506,7 @@ function isCorrectPlacement(ev, position) {
 }
 
 function showError(position) {
-  let msg = `"${current.title}" does not belong there! `;
-
-  if (position > 0) {
-    const beforeEvent = placed[position - 1];
-    if (current.year < beforeEvent.year) {
-      msg += `It happened BEFORE "${beforeEvent.title}".`;
-    }
-  }
-  if (position < placed.length && msg === `"${current.title}" does not belong there! `) {
-    const afterEvent = placed[position];
-    if (current.year > afterEvent.year) {
-      msg += `It happened AFTER "${afterEvent.title}".`;
-    }
-  }
-
-  if (msg === `"${current.title}" does not belong there! `) {
-    msg += `Find its correct chronological order on the timeline.`;
-  }
-
-  errorMsg.textContent = msg;
+  errorMsg.textContent = `"${current.title}" is not in the right place. Try again!`;
   errorModal.classList.remove("hidden");
 
   queue.unshift(current);
