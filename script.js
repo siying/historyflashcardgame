@@ -524,7 +524,7 @@ function render() {
     } else {
       const descDiv = document.createElement("div");
       descDiv.className = "card-line card-desc";
-      descDiv.innerHTML = `${current.desc} <span class="learn-link" data-id="${current.id}">learn</span>`;
+      descDiv.textContent = current.desc;
       cur.appendChild(descDiv);
     }
 
