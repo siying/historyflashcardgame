@@ -434,6 +434,121 @@ ALL_EVENTS.forEach(ev => { ev.longDesc = LONG_DESCRIPTIONS[ev.id] || "TBD"; });
 
 const GAME_SIZE = 10;
 
+const STRINGS = {
+  "world-en": {
+    title: "World History Timeline",
+    handTitle: "Your flashcards",
+    timelineTitle: "Timeline",
+    hint: "Drag the active card into the correct chronological spot on the timeline.",
+    progress: (n, total) => `${n} / ${total} placed`,
+    dropStart: "Drop card here to start timeline",
+    dropBefore: "Drop here (before all)",
+    dropAfter: "Drop here (after all)",
+    dropMiddle: "Drop here",
+    showDetail: "Show Detail",
+    showYear: "Show<br>Year",
+    learn: "learn",
+    errorTitle: "Not quite!",
+    errorMsg: (title) => `"${title}" is not in the right place. Try again!`,
+    retryBtn: "Try again",
+    winTitle: "You did it!",
+    stats: (obj) => `
+      <p>Cards placed: <span class="num">${obj.placed}</span></p>
+      <p>Total attempts: <span class="num">${obj.attempts}</span></p>
+      <p>Wrong guesses: <span class="num">${obj.errors}</span></p>
+      <p>Accuracy: <span class="num">${obj.accuracy}%</span></p>
+      <p>Time: <span class="num">${obj.time}</span></p>
+      <p>Year reveals: <span class="num">${obj.yearReveals}</span></p>
+      <p>Detail reveals: <span class="num">${obj.descReveals}</span></p>`,
+    playAgain: "Play again",
+    viewTimeline: "View timeline",
+    learnClose: "Close"
+  },
+  "world-zh": {
+    title: "世界历史时间轴",
+    handTitle: "待放卡片",
+    timelineTitle: "时间轴",
+    hint: "将上方卡片拖拽到下方时间轴的正确时间顺序位置。",
+    progress: (n, total) => `${n} / ${total} 已放置`,
+    dropStart: "将卡片拖至此处开始时间轴",
+    dropBefore: "拖拽到此处（所有之前）",
+    dropAfter: "拖拽到此处（所有之后）",
+    dropMiddle: "拖拽到此处",
+    showDetail: "显示详情",
+    showYear: "显示<br>年份",
+    learn: "详情",
+    errorTitle: "位置不对哦！",
+    errorMsg: (title) => `“${title}”的位置不对。再试一次！`,
+    retryBtn: "再试一次",
+    winTitle: "恭喜通关！",
+    stats: (obj) => `
+      <p>已放置卡片: <span class="num">${obj.placed}</span></p>
+      <p>总尝试次数: <span class="num">${obj.attempts}</span></p>
+      <p>错误猜测: <span class="num">${obj.errors}</span></p>
+      <p>正确率: <span class="num">${obj.accuracy}%</span></p>
+      <p>用时: <span class="num">${obj.time}</span></p>
+      <p>查看年份次数: <span class="num">${obj.yearReveals}</span></p>
+      <p>查看详情次数: <span class="num">${obj.descReveals}</span></p>`,
+    playAgain: "再玩一次",
+    viewTimeline: "查看时间轴",
+    learnClose: "关闭"
+  },
+  "china-zh": {
+    title: "中国历史时间轴",
+    handTitle: "待放卡片",
+    timelineTitle: "时间轴",
+    hint: "将上方卡片拖拽到下方时间轴的正确时间顺序位置。",
+    progress: (n, total) => `${n} / ${total} 已放置`,
+    dropStart: "将卡片拖至此处开始时间轴",
+    dropBefore: "拖拽到此处（所有之前）",
+    dropAfter: "拖拽到此处（所有之后）",
+    dropMiddle: "拖拽到此处",
+    showDetail: "显示详情",
+    showYear: "显示<br>年份",
+    learn: "详情",
+    errorTitle: "位置不对哦！",
+    errorMsg: (title) => `“${title}”的位置不对。再试一次！`,
+    retryBtn: "再试一次",
+    winTitle: "恭喜通关！",
+    stats: (obj) => `
+      <p>已放置卡片: <span class="num">${obj.placed}</span></p>
+      <p>总尝试次数: <span class="num">${obj.attempts}</span></p>
+      <p>错误猜测: <span class="num">${obj.errors}</span></p>
+      <p>正确率: <span class="num">${obj.accuracy}%</span></p>
+      <p>用时: <span class="num">${obj.time}</span></p>
+      <p>查看年份次数: <span class="num">${obj.yearReveals}</span></p>
+      <p>查看详情次数: <span class="num">${obj.descReveals}</span></p>`,
+    playAgain: "再玩一次",
+    viewTimeline: "查看时间轴",
+    learnClose: "关闭"
+  }
+};
+
+let currentMode = "world-en";
+let t = STRINGS[currentMode];
+
+function setMode(mode) {
+  currentMode = mode;
+  t = STRINGS[mode];
+  applyTranslations();
+  document.getElementById("selection-screen").classList.add("hidden");
+  document.getElementById("game-screen").classList.remove("hidden");
+  initGame();
+}
+
+function applyTranslations() {
+  document.getElementById("game-title").textContent = t.title;
+  document.getElementById("hand-title").textContent = t.handTitle;
+  document.getElementById("timeline-title").textContent = t.timelineTitle;
+  document.getElementById("hint-text").textContent = t.hint;
+  document.getElementById("error-title").textContent = t.errorTitle;
+  document.getElementById("retry-btn").textContent = t.retryBtn;
+  document.getElementById("win-title").textContent = t.winTitle;
+  document.getElementById("play-again").textContent = t.playAgain;
+  document.getElementById("close-win").textContent = t.viewTimeline;
+  document.getElementById("learn-close").textContent = t.learnClose;
+}
+
 let gameEvents = [];
 let queue = [];
 let placed = [];
@@ -494,7 +609,7 @@ function nextCard() {
 }
 
 function render() {
-  progressEl.textContent = `${placed.length} / ${gameEvents.length} placed`;
+      progressEl.textContent = t.progress(placed.length, gameEvents.length);
 
   cardZone.innerHTML = "";
 
@@ -511,7 +626,7 @@ function render() {
     if (!descRevealed) {
       const btn = document.createElement("button");
       btn.className = "reveal-btn";
-      btn.textContent = "Show Detail";
+      btn.textContent = t.showDetail;
       btn.addEventListener("click", e => {
         e.stopPropagation();
         if (!descRevealed && current) {
@@ -534,9 +649,9 @@ function render() {
   timeline.innerHTML = "";
 
   if (placed.length === 0) {
-    timeline.appendChild(makeDropzone(0, "Drop card here to start timeline"));
+    timeline.appendChild(makeDropzone(0, t.dropStart));
   } else {
-    timeline.appendChild(makeDropzone(0, "Drop here (before all)"));
+    timeline.appendChild(makeDropzone(0, t.dropBefore));
 
     placed.forEach((ev, idx) => {
       const yearRevealed = revealedYearIds.has(ev.id);
@@ -546,7 +661,7 @@ function render() {
       if (!yearRevealed) {
         const btn = document.createElement("button");
         btn.className = "show-year-btn";
-        btn.innerHTML = "Show<br>Year";
+        btn.innerHTML = t.showYear;
         btn.addEventListener("click", e => {
           e.stopPropagation();
           if (!revealedYearIds.has(ev.id)) {
@@ -567,12 +682,12 @@ function render() {
       info.className = "slot-info";
       info.innerHTML = `
         <div class="event-title">${ev.title}</div>
-        <div class="event-desc">${ev.desc} <span class="learn-link" data-id="${ev.id}">learn</span></div>
+        <div class="event-desc">${ev.desc} <span class="learn-link" data-id="${ev.id}">${t.learn}</span></div>
       `;
       slot.appendChild(info);
       timeline.appendChild(slot);
 
-      const label = (idx === placed.length - 1) ? "Drop here (after all)" : "Drop here";
+      const label = (idx === placed.length - 1) ? t.dropAfter : t.dropMiddle;
       timeline.appendChild(makeDropzone(idx + 1, label));
     });
   }
@@ -690,7 +805,7 @@ function handlePlacement(position) {
     current = null;
 
     if (placed.length === gameEvents.length) {
-      progressEl.textContent = `${placed.length} / ${gameEvents.length} placed`;
+  progressEl.textContent = t.progress(placed.length, gameEvents.length);
       render();
       setTimeout(showWin, 2000);
     } else {
@@ -715,7 +830,7 @@ function isCorrectPlacement(ev, position) {
 }
 
 function showError(position) {
-  errorMsg.textContent = `"${current.title}" is not in the right place. Try again!`;
+  errorMsg.textContent = t.errorMsg(current.title);
   errorModal.classList.remove("hidden");
 
   queue.unshift(current);
@@ -748,14 +863,15 @@ function showWin() {
   const mins = Math.floor(elapsed / 60);
   const secs = elapsed % 60;
   const accuracy = Math.round((gameEvents.length / attempts) * 100);
-  statsEl.innerHTML = `
-    <p>Cards placed: <span class="num">${gameEvents.length}</span></p>
-    <p>Total attempts: <span class="num">${attempts}</span></p>
-    <p>Wrong guesses: <span class="num">${errors}</span></p>
-    <p>Accuracy: <span class="num">${accuracy}%</span></p>
-    <p>Time: <span class="num">${mins}m ${secs}s</span></p>
-    <p>Year reveals: <span class="num">${showYearCount}</span></p>
-    <p>Detail reveals: <span class="num">${showDescCount}</span></p>`;
+  statsEl.innerHTML = t.stats({
+    placed: gameEvents.length,
+    attempts,
+    errors,
+    accuracy,
+    time: `${mins}m ${secs}s`,
+    yearReveals: showYearCount,
+    descReveals: showDescCount
+  });
   winModal.classList.remove("hidden");
 }
 
@@ -763,6 +879,12 @@ closeWin.addEventListener("click", () => {
   winModal.classList.add("hidden");
 });
 
-playAgain.addEventListener("click", initGame);
+playAgain.addEventListener("click", () => {
+  winModal.classList.add("hidden");
+  document.getElementById("game-screen").classList.add("hidden");
+  document.getElementById("selection-screen").classList.remove("hidden");
+});
 
-initGame();
+document.getElementById("btn-world-en").addEventListener("click", () => setMode("world-en"));
+document.getElementById("btn-world-zh").addEventListener("click", () => setMode("world-zh"));
+document.getElementById("btn-china-zh").addEventListener("click", () => setMode("china-zh"));

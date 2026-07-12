@@ -7,28 +7,52 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <h1>History Flashcard Timeline</h1>
-    <p id="progress">0 / 10 placed</p>
-  </header>
+  <div id="selection-screen">
+    <div class="selection-box">
+      <h1>History Timeline Game</h1>
+      <h2>历史卡片时间轴</h2>
+      <p class="subtitle">Select a mode / 请选择游戏模式</p>
+      <div class="mode-buttons">
+        <button class="mode-btn" id="btn-world-en" data-mode="world-en">
+          <span class="mode-title">World History</span>
+          <span class="mode-lang">English</span>
+        </button>
+        <button class="mode-btn" id="btn-world-zh" data-mode="world-zh">
+          <span class="mode-title">世界历史</span>
+          <span class="mode-lang">中文 (Chinese)</span>
+        </button>
+        <button class="mode-btn" id="btn-china-zh" data-mode="china-zh">
+          <span class="mode-title">中国历史</span>
+          <span class="mode-lang">中文 (Chinese)</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
-  <main id="game">
-    <section id="hand">
-      <h2>Your flashcards</h2>
-      <div id="card-zone" class="card-zone"></div>
-    </section>
+  <div id="game-screen" class="hidden">
+    <header>
+      <h1 id="game-title">History Flashcard Timeline</h1>
+      <p id="progress">0 / 10 placed</p>
+    </header>
 
-    <section id="timeline-section">
-      <h2>Timeline</h2>
-      <p class="hint">Drag the active card into the correct chronological spot on the timeline.</p>
-      <div id="timeline" class="timeline"></div>
-    </section>
-  </main>
+    <main id="game">
+      <section id="hand">
+        <h2 id="hand-title">Your flashcards</h2>
+        <div id="card-zone" class="card-zone"></div>
+      </section>
+
+      <section id="timeline-section">
+        <h2 id="timeline-title">Timeline</h2>
+        <p id="hint-text" class="hint">Drag the active card into the correct chronological spot on the timeline.</p>
+        <div id="timeline" class="timeline"></div>
+      </section>
+    </main>
+  </div>
 
   <!-- Error modal -->
   <div id="error-modal" class="modal hidden">
     <div class="modal-content">
-      <h2>Not quite!</h2>
+      <h2 id="error-title">Not quite!</h2>
       <p id="error-msg"></p>
       <button id="retry-btn">Try again</button>
     </div>
@@ -37,7 +61,7 @@
   <!-- Win modal -->
   <div id="win-modal" class="modal hidden">
     <div class="modal-content">
-      <h2>You did it!</h2>
+      <h2 id="win-title">You did it!</h2>
       <div id="stats"></div>
       <button id="play-again">Play again</button>
       <button id="close-win" class="secondary-btn">View timeline</button>
