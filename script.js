@@ -227,6 +227,8 @@ const ALL_EVENTS = [
   { id: 200, year: 2022,  displayYear: "2022",     title: "Russia invades Ukraine",        desc: "Largest European land war since WWII." }
 ];
 
+ALL_EVENTS.forEach(ev => { ev.longDesc = ev.longDesc || "TBD"; });
+
 const GAME_SIZE = 10;
 
 let gameEvents = [];
@@ -251,6 +253,10 @@ const winModal   = document.getElementById("win-modal");
 const statsEl    = document.getElementById("stats");
 const playAgain  = document.getElementById("play-again");
 const closeWin   = document.getElementById("close-win");
+const learnModal  = document.getElementById("learn-modal");
+const learnTitle  = document.getElementById("learn-title");
+const learnBody   = document.getElementById("learn-body");
+const learnClose  = document.getElementById("learn-close");
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -315,7 +321,7 @@ function render() {
     } else {
       const descDiv = document.createElement("div");
       descDiv.className = "card-line card-desc";
-      descDiv.textContent = current.desc;
+      descDiv.innerHTML = `${current.desc} <span class="learn-link" data-id="${current.id}">learn</span>`;
       cur.appendChild(descDiv);
     }
 
@@ -337,7 +343,7 @@ function render() {
       if (!yearRevealed) {
         const btn = document.createElement("button");
         btn.className = "show-year-btn";
-        btn.textContent = "Show Year";
+        btn.innerHTML = "Show<br>Year";
         btn.addEventListener("click", e => {
           e.stopPropagation();
           if (!revealedYearIds.has(ev.id)) {
@@ -358,7 +364,7 @@ function render() {
       info.className = "slot-info";
       info.innerHTML = `
         <div class="event-title">${ev.title}</div>
-        <div class="event-desc">${ev.desc}</div>
+        <div class="event-desc">${ev.desc} <span class="learn-link" data-id="${ev.id}">learn</span></div>
       `;
       slot.appendChild(info);
       timeline.appendChild(slot);
@@ -516,6 +522,22 @@ function showError(position) {
 retryBtn.addEventListener("click", () => {
   errorModal.classList.add("hidden");
   nextCard();
+});
+
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("learn-link")) {
+    const id = parseInt(e.target.dataset.id, 10);
+    const ev = ALL_EVENTS.find(x => x.id === id);
+    if (ev) {
+      learnTitle.textContent = ev.title;
+      learnBody.textContent = ev.longDesc || "Details coming soon!";
+      learnModal.classList.remove("hidden");
+    }
+  }
+});
+
+learnClose.addEventListener("click", () => {
+  learnModal.classList.add("hidden");
 });
 
 function showWin() {
